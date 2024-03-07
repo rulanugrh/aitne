@@ -3,26 +3,18 @@ package config
 import (
 	"flag"
 	"log"
-	"path/filepath"
+	"os"
 
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/client-go/kubernetes"
 	v1 "k8s.io/client-go/kubernetes/typed/apps/v1"
 	"k8s.io/client-go/tools/clientcmd"
-	"k8s.io/client-go/util/homedir"
 )
 
-func GetConfig() (v1.DeploymentInterface, error) {
-	var kubeconfig *string
-	home := homedir.HomeDir()
-	if home != "" {
-		kubeconfig = flag.String("config", filepath.Join(home, ".kube", "config"), "file config absolute path")
-	} else {
-		kubeconfig = flag.String("config", "", "absolute path to file config")
-	}
-
+func GetConfig() (v1.DeploymentInterface, v1.DaemonSetInterface, error) {
+	kubeconfig := os.Args[1]
 	flag.Parse()
-	client, err := clientcmd.BuildConfigFromFlags("", *kubeconfig)
+	client, err := clientcmd.BuildConfigFromFlags("", kubeconfig)
 	if err != nil {
 		log.Println("Error cannot read build config file")
 	}
@@ -33,6 +25,7 @@ func GetConfig() (v1.DeploymentInterface, error) {
 	}
 
 	deployment := gotClient.AppsV1().Deployments(corev1.NamespaceDefault)
-	return deployment, nil
+	daemonset := gotClient.AppsV1().DaemonSets(corev1.NamespaceDefault)
+	return deployment, daemonset, nil
 
 }
