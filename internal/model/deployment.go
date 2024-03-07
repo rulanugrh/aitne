@@ -1,10 +1,13 @@
 package model
 
 type CreateDeployment struct {
+	Kind        string            `json:"kind"`
+	APIVersion  string            `json:"api_version"`
 	Name        string            `json:"name"`
 	Replicas    int32             `json:"replica"`
 	Labels      map[string]string `json:"labels"`
 	MatchLabels map[string]string `json:"match_labels"`
+	Annotations map[string]string `json:"annotations"`
 	Container   Container         `json:"container"`
 }
 

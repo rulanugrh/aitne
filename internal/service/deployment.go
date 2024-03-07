@@ -30,8 +30,14 @@ func NewDeployment(client v1.DeploymentInterface) Deployment {
 
 func (c *crudk8s) Create(req model.CreateDeployment) (*model.ResponseCreate, error) {
 	deploy := apiv1.Deployment{
+		TypeMeta: metav1.TypeMeta{
+			APIVersion: req.APIVersion,
+			Kind:       req.Kind,
+		},
 		ObjectMeta: metav1.ObjectMeta{
-			Name: req.Name,
+			Name:        req.Name,
+			Labels:      req.Labels,
+			Annotations: req.Annotations,
 		},
 		Spec: apiv1.DeploymentSpec{
 			Replicas: &req.Replicas,
