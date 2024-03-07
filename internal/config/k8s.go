@@ -3,7 +3,6 @@ package config
 import (
 	"flag"
 	"log"
-	"os"
 
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/client-go/kubernetes"
@@ -11,10 +10,9 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 )
 
-func GetConfig() (v1.DeploymentInterface, v1.DaemonSetInterface, v1.ReplicaSetInterface, error) {
-	kubeconfig := os.Args[1]
+func GetConfig(kubepath *string) (v1.DeploymentInterface, v1.DaemonSetInterface, v1.ReplicaSetInterface, error) {
 	flag.Parse()
-	client, err := clientcmd.BuildConfigFromFlags("", kubeconfig)
+	client, err := clientcmd.BuildConfigFromFlags("", *kubepath)
 	if err != nil {
 		log.Println("Error cannot read build config file")
 	}

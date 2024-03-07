@@ -11,9 +11,10 @@ import (
 )
 
 var (
-	opt   = flag.String("opt", "get", "to use operator ex. get / delete / catch")
-	types = flag.String("types", "deployment", "to use type data ex. deployment / daemonset")
-	name  = flag.String("name", "demo-deployment", "this flag use for catch opt ")
+	kubeconfig = flag.String("kubeconfig", "$HOME/.kube/config/", "flag for k8s config file")
+	opt        = flag.String("opt", "get", "to use operator ex. get / delete / catch")
+	types      = flag.String("types", "deployment", "to use type data ex. deployment / daemonset")
+	name       = flag.String("name", "demo-deployment", "this flag use for catch opt ")
 )
 
 var (
@@ -28,7 +29,7 @@ type CLI struct {
 }
 
 func main() {
-	deployment, daemon, _, err := config.GetConfig()
+	deployment, daemon, _, err := config.GetConfig(kubeconfig)
 	if err != nil {
 		log.Printf("Error %s", err.Error())
 	}
