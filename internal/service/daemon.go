@@ -32,6 +32,12 @@ func (d *daemonset) Create(req model.DaemonSet) (*model.ResponseDaemonSet, error
 			Kind:       req.Kind,
 			APIVersion: req.APIVersion,
 		},
+		ObjectMeta: metav1.ObjectMeta{
+			Labels:      req.Meta.Labels,
+			Name:        req.Meta.MetaName,
+			Namespace:   req.Meta.Namespace,
+			Annotations: req.Meta.Annotations,
+		},
 		Spec: apiv1.DaemonSetSpec{
 			MinReadySeconds: req.MinReady,
 			Selector: &metav1.LabelSelector{
