@@ -44,7 +44,9 @@ func main() {
 		c.get_opt(*types)
 	} else if opt == &catch {
 		c.catch_opt(*types, *name)
-	} else {
+	} else if opt == &deleted {
+    c.delete_opt(*types, *name)
+  } else {
 		log.Println("your opt is invalid, use go run cmd.go -h to see details")
 	}
 }
@@ -69,6 +71,16 @@ func (c *CLI) catch_opt(types string, name string) {
 	}
 }
 
+func (c *CLI) delete_opt(types string, name string) {
+  if types == "deployment" {
+    printout_response(c.deployment.Delete(name))
+  } else if types == "daemon" {
+    printout_response(c.daemon.Delete(name))
+  } else {
+    log.Println("invalid type data")
+  }
+}
+
 func convert_response_to_json(data any, err error) {
 	if err != nil {
 		log.Printf("something error %s", err.Error())
@@ -81,4 +93,12 @@ func convert_response_to_json(data any, err error) {
 
 	fmt.Println(string(response))
 
+}
+
+func printout_response(err error) {
+  if err != nil {
+    log.Printf("something error %s", err.Error())
+  }
+
+  log.Println("success operator")
 }
