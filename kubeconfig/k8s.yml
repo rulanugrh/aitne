@@ -1,0 +1,20 @@
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data: <ca-data>
+    server: https://infra.kyo.id
+  name: sample-cluster
+
+contexts:
+- context:
+    cluster: sample-cluster
+    user: kyoo
+  name: sample-cluster
+
+current-context: sample-cluster
+kind: Config
+preferences: {}
+users:
+- name: kyoo
+  user:
+    token: secrett-token
