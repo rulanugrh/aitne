@@ -11,7 +11,7 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 )
 
-func GetConfig() (v1.DeploymentInterface, v1.DaemonSetInterface, error) {
+func GetConfig() (v1.DeploymentInterface, v1.DaemonSetInterface, v1.ReplicaSetInterface, error) {
 	kubeconfig := os.Args[1]
 	flag.Parse()
 	client, err := clientcmd.BuildConfigFromFlags("", kubeconfig)
@@ -26,6 +26,8 @@ func GetConfig() (v1.DeploymentInterface, v1.DaemonSetInterface, error) {
 
 	deployment := gotClient.AppsV1().Deployments(corev1.NamespaceDefault)
 	daemonset := gotClient.AppsV1().DaemonSets(corev1.NamespaceDefault)
-	return deployment, daemonset, nil
+	replica := gotClient.AppsV1().ReplicaSets(corev1.NamespaceDefault)
+
+	return deployment, daemonset, replica, nil
 
 }
