@@ -15,3 +15,13 @@ type ResponsePod struct {
 	APIVersion string     `json:"api_version"`
 	Meta       ObjectMeta `json:"meta"`
 }
+
+type GetPod struct {
+	Name            string            `json:"name"`
+	Namespace       string            `json:"namespace"`
+	APIVersions     string            `json:"api_version"`
+	Labels          map[string]string `json:"labels"`
+	Annotations     map[string]string `json:"annotations"`
+	ResourceVersion string            `json:"resource_v"`
+	Kind            string            `json:"kind"`
+}

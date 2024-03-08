@@ -13,9 +13,9 @@ import (
 
 type Pods interface {
 	Create(req model.Pod) (*model.ResponsePod, error)
-	List()
+	List() (*[]model.GetPod, error)
 	Delete(name string) error
-	GetByName(name string)
+	GetByName(name string) (*model.GetPod, error)
 }
 
 type pod struct {
@@ -77,7 +77,29 @@ func (p *pod) Create(req model.Pod) (*model.ResponsePod, error) {
 	return &response, nil
 }
 
-func (p *pod) List() {}
+func (p *pod) List() (*[]model.GetPod, error) {
+	list, err := p.client.List(context.TODO(), metav1.ListOptions{})
+	if err != nil {
+		return nil, util.Error("cannot get data all pod")
+	}
+
+	var response []model.GetPod
+	for _, data := range list.Items {
+		result := model.GetPod{
+			Name:            data.Name,
+			Namespace:       data.Namespace,
+			Labels:          data.Labels,
+			APIVersions:     data.APIVersion,
+			ResourceVersion: data.ResourceVersion,
+			Annotations:     data.Annotations,
+			Kind:            data.Kind,
+		}
+
+		response = append(response, result)
+	}
+
+	return &response, nil
+}
 
 func (p *pod) Delete(name string) error {
 	deleted := metav1.DeletePropagationForeground
@@ -89,4 +111,21 @@ func (p *pod) Delete(name string) error {
 	return nil
 }
 
-func (p *pod) GetByName(name string) {}
+func (p *pod) GetByName(name string) (*model.GetPod, error) {
+	data, err := p.client.Get(context.TODO(), name, metav1.GetOptions{})
+	if err != nil {
+		return nil, util.Error("cannot get data by this name")
+	}
+
+	result := model.GetPod{
+		Name:            data.Name,
+		Namespace:       data.Namespace,
+		Labels:          data.Labels,
+		APIVersions:     data.APIVersion,
+		ResourceVersion: data.ResourceVersion,
+		Annotations:     data.Annotations,
+		Kind:            data.Kind,
+	}
+
+	return &result, nil
+}
