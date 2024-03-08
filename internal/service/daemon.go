@@ -17,6 +17,7 @@ type DaemonSet interface {
 	Delete(name string) error
 	GetByName(name string) (*model.GetDaemonSet, error)
 }
+
 type daemonset struct {
 	client v1.DaemonSetInterface
 }

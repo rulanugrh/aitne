@@ -1,7 +1,6 @@
 package config
 
 import (
-	"flag"
 	"log"
 
 	corev1 "k8s.io/api/core/v1"
@@ -10,8 +9,7 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 )
 
-func GetConfig(kubepath *string) (v1.DeploymentInterface, v1.DaemonSetInterface, v1.ReplicaSetInterface, error) {
-	flag.Parse()
+func GetConfig(kubepath *string) (v1.DeploymentInterface, v1.DaemonSetInterface, v1.ReplicaSetInterface, v1.StatefulSetInterface ,error) {
 	client, err := clientcmd.BuildConfigFromFlags("", *kubepath)
 	if err != nil {
 		log.Println("Error cannot read build config file")
@@ -25,7 +23,8 @@ func GetConfig(kubepath *string) (v1.DeploymentInterface, v1.DaemonSetInterface,
 	deployment := gotClient.AppsV1().Deployments(corev1.NamespaceDefault)
 	daemonset := gotClient.AppsV1().DaemonSets(corev1.NamespaceDefault)
 	replica := gotClient.AppsV1().ReplicaSets(corev1.NamespaceDefault)
+  stateful := gotClient.AppsV1().StatefulSets(corev1.NamespaceDefault)
 
-	return deployment, daemonset, replica, nil
+	return deployment, daemonset, replica, stateful, nil
 
 }
