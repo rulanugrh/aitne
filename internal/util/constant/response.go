@@ -1,4 +1,4 @@
-package util
+package constant
 
 type Response struct {
 	Code    int    `json:"code"`
