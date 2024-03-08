@@ -8,6 +8,7 @@ import (
 
 	"github.com/rulanugrh/aitne/internal/config"
 	"github.com/rulanugrh/aitne/internal/service/apps"
+	"github.com/rulanugrh/aitne/internal/service/core"
 )
 
 var (
@@ -27,6 +28,8 @@ type CLI struct {
 	deployment apps.Deployment
 	daemon     apps.DaemonSet
 	replica    apps.ReplicaSet
+
+	pod core.Pods
 }
 
 func main() {
@@ -38,11 +41,13 @@ func main() {
 	newDeployment := apps.NewDeployment(client)
 	newDaemonSet := apps.NewDaemonSet(client)
 	newReplica := apps.NewReplicaSet(client)
+	newPod := core.NewPod(client)
 
 	c := CLI{
 		deployment: newDeployment,
 		daemon:     newDaemonSet,
 		replica:    newReplica,
+		pod:        newPod,
 	}
 
 	if opt == &get {
@@ -63,6 +68,8 @@ func (c *CLI) get_opt(types string) {
 		convert_response_to_json(c.daemon.List())
 	} else if types == "replica" {
 		convert_response_to_json(c.replica.List())
+	} else if types == "pod" {
+		convert_response_to_json(c.pod.List())
 	} else {
 		log.Println("sorry invalid type data")
 	}
@@ -73,6 +80,8 @@ func (c *CLI) catch_opt(types string, name string) {
 		convert_response_to_json(c.deployment.GetByName(name))
 	} else if types == "daemon" {
 		convert_response_to_json(c.daemon.GetByName(name))
+	} else if types == "pod" {
+		convert_response_to_json(c.pod.GetByName(name))
 	} else if types == "replica" {
 		convert_response_to_json(c.replica.GetByName(name))
 	} else {
@@ -87,6 +96,8 @@ func (c *CLI) delete_opt(types string, name string) {
 		printout_response(c.daemon.Delete(name))
 	} else if types == "replica" {
 		printout_response(c.replica.Delete(name))
+	} else if types == "pod" {
+		printout_response(c.pod.Delete(name))
 	} else {
 		log.Println("invalid type data")
 	}
