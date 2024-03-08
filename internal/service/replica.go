@@ -8,6 +8,7 @@ import (
 	apiv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/client-go/kubernetes"
 	v1 "k8s.io/client-go/kubernetes/typed/apps/v1"
 )
 
@@ -22,9 +23,9 @@ type replicaset struct {
 	client v1.ReplicaSetInterface
 }
 
-func NewReplicaSet(client v1.ReplicaSetInterface) ReplicaSet {
+func NewReplicaSet(client *kubernetes.Clientset) ReplicaSet {
 	return &replicaset{
-		client: client,
+		client: client.AppsV1().ReplicaSets(corev1.NamespaceDefault),
 	}
 }
 

@@ -30,14 +30,14 @@ type CLI struct {
 }
 
 func main() {
-	deployment, daemon, replica, _, err := config.GetConfig(kubeconfig)
+	client, err := config.GetConfig(kubeconfig)
 	if err != nil {
 		log.Printf("Error %s", err.Error())
 	}
 
-	newDeployment := service.NewDeployment(deployment)
-	newDaemonSet := service.NewDaemonSet(daemon)
-	newReplica := service.NewReplicaSet(replica)
+	newDeployment := service.NewDeployment(client)
+	newDaemonSet := service.NewDaemonSet(client)
+	newReplica := service.NewReplicaSet(client)
 
 	c := CLI{
 		deployment: newDeployment,

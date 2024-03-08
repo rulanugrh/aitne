@@ -8,6 +8,7 @@ import (
 	apiv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/client-go/kubernetes"
 	v1 "k8s.io/client-go/kubernetes/typed/apps/v1"
 )
 
@@ -22,9 +23,9 @@ type crudk8s struct {
 	client v1.DeploymentInterface
 }
 
-func NewDeployment(client v1.DeploymentInterface) Deployment {
+func NewDeployment(client *kubernetes.Clientset) Deployment {
 	return &crudk8s{
-		client: client,
+		client: client.AppsV1().Deployments(corev1.NamespaceDefault),
 	}
 }
 

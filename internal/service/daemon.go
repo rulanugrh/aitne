@@ -8,6 +8,7 @@ import (
 	apiv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/client-go/kubernetes"
 	v1 "k8s.io/client-go/kubernetes/typed/apps/v1"
 )
 
@@ -22,9 +23,9 @@ type daemonset struct {
 	client v1.DaemonSetInterface
 }
 
-func NewDaemonSet(client v1.DaemonSetInterface) DaemonSet {
+func NewDaemonSet(client *kubernetes.Clientset) DaemonSet {
 	return &daemonset{
-		client: client,
+		client: client.AppsV1().DaemonSets(corev1.NamespaceDefault),
 	}
 }
 
