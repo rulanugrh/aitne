@@ -30,7 +30,7 @@ type CLI struct {
 }
 
 func main() {
-	deployment, daemon, replica, err := config.GetConfig(kubeconfig)
+	deployment, daemon, replica, _, err := config.GetConfig(kubeconfig)
 	if err != nil {
 		log.Printf("Error %s", err.Error())
 	}
