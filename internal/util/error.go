@@ -1,9 +1,13 @@
 package util
 
-type Error struct {
+type Message struct {
 	Message string
 }
 
-func (e Error) Error() string {
+func (e Message) Error() string {
 	return e.Message
+}
+
+func Error(msg string) Message {
+	return Message{Message: msg}
 }

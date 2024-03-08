@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/rulanugrh/aitne/internal/model"
+	"github.com/rulanugrh/aitne/internal/util"
 	apiv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -69,7 +70,7 @@ func (r *replicaset) Create(req model.ReplicaSet) (*model.ResponseReplicaSet, er
 
 	data, err := r.client.Create(context.TODO(), &replica, metav1.CreateOptions{})
 	if err != nil {
-		return nil, err
+		return nil, util.Error("error cannot create replica")
 	}
 
 	response := model.ResponseReplicaSet{
@@ -89,7 +90,7 @@ func (r *replicaset) Create(req model.ReplicaSet) (*model.ResponseReplicaSet, er
 func (r *replicaset) List() (*[]model.GetReplicaSet, error) {
 	list, err := r.client.List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
-		return nil, err
+		return nil, util.Error("cannot get data list replica")
 	}
 
 	var response []model.GetReplicaSet
@@ -118,7 +119,7 @@ func (r *replicaset) Delete(name string) error {
 	})
 
 	if err != nil {
-		return err
+		return util.Error("error cannot delete replica")
 	}
 
 	return nil
@@ -127,7 +128,7 @@ func (r *replicaset) Delete(name string) error {
 func (r *replicaset) GetByName(name string) (*model.GetReplicaSet, error) {
 	data, err := r.client.Get(context.TODO(), name, metav1.GetOptions{})
 	if err != nil {
-		return nil, err
+		return nil, util.Error("error cannot get replica by this name")
 	}
 
 	response := model.GetReplicaSet{

@@ -2,9 +2,9 @@ package service
 
 import (
 	"context"
-	"log"
 
 	"github.com/rulanugrh/aitne/internal/model"
+	"github.com/rulanugrh/aitne/internal/util"
 	apiv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -69,7 +69,7 @@ func (c *crudk8s) Create(req model.CreateDeployment) (*model.ResponseCreate, err
 
 	create, err := c.client.Create(context.TODO(), &deploy, metav1.CreateOptions{})
 	if err != nil {
-		return nil, err
+		return nil, util.Error("error cannot create deployment")
 	}
 
 	response := model.ResponseCreate{
@@ -83,7 +83,7 @@ func (c *crudk8s) Create(req model.CreateDeployment) (*model.ResponseCreate, err
 func (c *crudk8s) List() (*[]model.GetDeployment, error) {
 	list, err := c.client.List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
-		log.Println("error")
+		return nil, util.Error("error cannot get data deployment")
 	}
 
 	var response []model.GetDeployment
@@ -112,7 +112,7 @@ func (c *crudk8s) Delete(name string) error {
 	})
 
 	if err != nil {
-		return err
+		return util.Error("error cannot get delete deployment by this name")
 	}
 
 	return nil
@@ -121,7 +121,7 @@ func (c *crudk8s) Delete(name string) error {
 func (c *crudk8s) GetByName(name string) (*model.GetDeployment, error) {
 	deployment, err := c.client.Get(context.TODO(), name, metav1.GetOptions{})
 	if err != nil {
-		return nil, err
+		return nil, util.Error("error cannot get data deployment by this name")
 	}
 
 	response := model.GetDeployment{

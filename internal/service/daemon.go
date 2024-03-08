@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/rulanugrh/aitne/internal/model"
+	"github.com/rulanugrh/aitne/internal/util"
 	apiv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -71,7 +72,7 @@ func (d *daemonset) Create(req model.DaemonSet) (*model.ResponseDaemonSet, error
 
 	data, err := d.client.Create(context.TODO(), &daemon, metav1.CreateOptions{})
 	if err != nil {
-		return nil, err
+		return nil, util.Error("error cannot create daemon")
 	}
 
 	response := model.ResponseDaemonSet{
@@ -91,7 +92,7 @@ func (d *daemonset) Create(req model.DaemonSet) (*model.ResponseDaemonSet, error
 func (d *daemonset) List() (*[]model.GetDaemonSet, error) {
 	data, err := d.client.List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
-		return nil, err
+		return nil, util.Error("error cannot get data daemon")
 	}
 
 	var response []model.GetDaemonSet
@@ -119,7 +120,7 @@ func (d *daemonset) Delete(name string) error {
 	})
 
 	if err != nil {
-		return err
+		return util.Error("error cannot delete daemon by this name")
 	}
 
 	return nil
@@ -128,7 +129,7 @@ func (d *daemonset) Delete(name string) error {
 func (d *daemonset) GetByName(name string) (*model.GetDaemonSet, error) {
 	data, err := d.client.Get(context.TODO(), name, metav1.GetOptions{})
 	if err != nil {
-		return nil, err
+		return nil, util.Error("error cannot get data daemon by this name ")
 	}
 
 	response := model.GetDaemonSet{
