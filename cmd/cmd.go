@@ -7,7 +7,7 @@ import (
 	"log"
 
 	"github.com/rulanugrh/aitne/internal/config"
-	"github.com/rulanugrh/aitne/internal/service"
+	"github.com/rulanugrh/aitne/internal/service/apps"
 )
 
 var (
@@ -24,9 +24,9 @@ var (
 )
 
 type CLI struct {
-	deployment service.Deployment
-	daemon     service.DaemonSet
-	replica    service.ReplicaSet
+	deployment apps.Deployment
+	daemon     apps.DaemonSet
+	replica    apps.ReplicaSet
 }
 
 func main() {
@@ -35,9 +35,9 @@ func main() {
 		log.Printf("Error %s", err.Error())
 	}
 
-	newDeployment := service.NewDeployment(client)
-	newDaemonSet := service.NewDaemonSet(client)
-	newReplica := service.NewReplicaSet(client)
+	newDeployment := apps.NewDeployment(client)
+	newDaemonSet := apps.NewDaemonSet(client)
+	newReplica := apps.NewReplicaSet(client)
 
 	c := CLI{
 		deployment: newDeployment,
