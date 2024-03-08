@@ -12,7 +12,7 @@ func (r Response) Error() string {
 
 func Success(msg string, data any) error {
 	return Response{
-		Code:    200,
+		Code:    200, 
 		Message: msg,
 		Data:    data,
 	}
