@@ -26,19 +26,23 @@ var (
 type CLI struct {
 	deployment service.Deployment
 	daemon     service.DaemonSet
+	replica    service.ReplicaSet
 }
 
 func main() {
-	deployment, daemon, _, err := config.GetConfig(kubeconfig)
+	deployment, daemon, replica, err := config.GetConfig(kubeconfig)
 	if err != nil {
 		log.Printf("Error %s", err.Error())
 	}
 
 	newDeployment := service.NewDeployment(deployment)
 	newDaemonSet := service.NewDaemonSet(daemon)
+	newReplica := service.NewReplicaSet(replica)
+
 	c := CLI{
 		deployment: newDeployment,
 		daemon:     newDaemonSet,
+		replica:    newReplica,
 	}
 
 	if opt == &get {
@@ -57,6 +61,8 @@ func (c *CLI) get_opt(types string) {
 		convert_response_to_json(c.deployment.List())
 	} else if types == "daemon" {
 		convert_response_to_json(c.daemon.List())
+	} else if types == "replica" {
+		convert_response_to_json(c.replica.List())
 	} else {
 		log.Println("sorry invalid type data")
 	}
@@ -67,6 +73,8 @@ func (c *CLI) catch_opt(types string, name string) {
 		convert_response_to_json(c.deployment.GetByName(name))
 	} else if types == "daemon" {
 		convert_response_to_json(c.daemon.GetByName(name))
+	} else if types == "replica" {
+		convert_response_to_json(c.replica.GetByName(name))
 	} else {
 		log.Println("sorry invalid type data")
 	}
@@ -77,6 +85,8 @@ func (c *CLI) delete_opt(types string, name string) {
 		printout_response(c.deployment.Delete(name))
 	} else if types == "daemon" {
 		printout_response(c.daemon.Delete(name))
+	} else if types == "replica" {
+		printout_response(c.replica.Delete(name))
 	} else {
 		log.Println("invalid type data")
 	}
