@@ -6,7 +6,7 @@ type StatefullSet struct {
 	Kind        string            `json:"kind"`
 	APIVersion  string            `json:"api_version"`
 	Container   Container         `json:"container"`
-	MinReady    int32             `json:"min_ready"`
+	Replica     int32             `json:"replica"`
 	MatchLabels map[string]string `json:"match_labels"`
 	Meta        ObjectMeta        `json:"meta"`
 }

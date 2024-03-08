@@ -42,7 +42,7 @@ func (r *replicaset) Create(req model.ReplicaSet) (*model.ResponseReplicaSet, er
 			Labels:      req.Meta.Labels,
 		},
 		Spec: apiv1.ReplicaSetSpec{
-			Replicas: &req.MinReady,
+			Replicas: &req.Replica,
 			Template: corev1.PodTemplateSpec{
 				ObjectMeta: metav1.ObjectMeta{
 					Name:        req.Meta.MetaName,

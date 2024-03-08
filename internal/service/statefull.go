@@ -15,6 +15,7 @@ import (
 type StatefullSet interface {
 	Create(req model.StatefullSet) (*model.ResponseStatefullSet, error)
 	List() (*[]model.GetStatefulSet, error)
+	GetByName(name string) (*model.GetStatefulSet, error)
 	Delete(name string) error
 }
 
@@ -39,6 +40,7 @@ func (s *statefullset) Create(req model.StatefullSet) (*model.ResponseStatefullS
 			Labels:      req.Meta.Labels,
 		},
 		Spec: apiv1.StatefulSetSpec{
+			Replicas:    &req.Replica,
 			ServiceName: req.ServiceName,
 			Template: corev1.PodTemplateSpec{
 				ObjectMeta: metav1.ObjectMeta{
@@ -122,4 +124,25 @@ func (s *statefullset) Delete(name string) error {
 	}
 
 	return nil
+}
+
+func (s *statefullset) GetByName(name string) (*model.GetStatefulSet, error) {
+	data, err := s.client.Get(context.TODO(), name, metav1.GetOptions{})
+	if err != nil {
+		return nil, util.Error("cannot find statefull by this name statefull")
+	}
+
+	response := model.GetStatefulSet{
+		NodeName:        data.Spec.Template.Spec.NodeName,
+		Name:            data.Name,
+		Namespace:       data.Namespace,
+		Kind:            data.Kind,
+		APIVersions:     data.APIVersion,
+		Annotations:     data.Annotations,
+		Labels:          data.Labels,
+		Replica:         *data.Spec.Replicas,
+		ResourceVersion: data.ResourceVersion,
+	}
+
+	return &response, nil
 }
