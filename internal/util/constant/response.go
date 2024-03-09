@@ -1,5 +1,7 @@
 package constant
 
+import "fmt"
+
 type Response struct {
 	Code    int    `json:"code"`
 	Message string `json:"msg"`
@@ -12,7 +14,7 @@ func (r Response) Error() string {
 
 func Success(msg string, data any) error {
 	return Response{
-		Code:    200, 
+		Code:    200,
 		Message: msg,
 		Data:    data,
 	}
@@ -43,5 +45,12 @@ func InternalServerError(msg string) error {
 	return Response{
 		Code:    500,
 		Message: msg,
+	}
+}
+
+func Deleted(msg string, data any) error {
+	return Response{
+		Code:    204,
+		Message: fmt.Sprintf("%s %s", msg, data),
 	}
 }

@@ -8,6 +8,6 @@ func (e Message) Error() string {
 	return e.Message
 }
 
-func Error(msg string) Message {
+func Error(msg string) error {
 	return Message{Message: msg}
 }
