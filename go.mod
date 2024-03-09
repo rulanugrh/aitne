@@ -3,6 +3,7 @@ module github.com/rulanugrh/aitne
 go 1.21.6
 
 require (
+	github.com/gorilla/mux v1.8.1
 	k8s.io/api v0.29.2
 	k8s.io/apimachinery v0.29.2
 	k8s.io/client-go v0.29.2
