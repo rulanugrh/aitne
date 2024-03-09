@@ -29,7 +29,9 @@ type CLI struct {
 	daemon     apps.DaemonSet
 	replica    apps.ReplicaSet
 
-	pod core.Pods
+	pod       core.Pods
+	sevice    core.Service
+	namespace core.Namespace
 }
 
 func main() {
@@ -42,12 +44,16 @@ func main() {
 	newDaemonSet := apps.NewDaemonSet(client)
 	newReplica := apps.NewReplicaSet(client)
 	newPod := core.NewPod(client)
+	newService := core.NewServiceKurbenetes(client)
+	newNamespce := core.NewNamespace(client)
 
 	c := CLI{
 		deployment: newDeployment,
 		daemon:     newDaemonSet,
 		replica:    newReplica,
 		pod:        newPod,
+		sevice:     newService,
+		namespace:  newNamespce,
 	}
 
 	if opt == &get {
@@ -70,6 +76,10 @@ func (c *CLI) get_opt(types string) {
 		convert_response_to_json(c.replica.List())
 	} else if types == "pod" {
 		convert_response_to_json(c.pod.List())
+	} else if types == "service" {
+		convert_response_to_json(c.sevice.List())
+	} else if types == "namespace" {
+		convert_response_to_json(c.namespace.List())
 	} else {
 		log.Println("sorry invalid type data")
 	}
@@ -84,6 +94,10 @@ func (c *CLI) catch_opt(types string, name string) {
 		convert_response_to_json(c.pod.GetByName(name))
 	} else if types == "replica" {
 		convert_response_to_json(c.replica.GetByName(name))
+	} else if types == "service" {
+		convert_response_to_json(c.sevice.GetByName(name))
+	} else if types == "namespace" {
+		convert_response_to_json(c.namespace.GetByName(name))
 	} else {
 		log.Println("sorry invalid type data")
 	}
@@ -98,6 +112,10 @@ func (c *CLI) delete_opt(types string, name string) {
 		printout_response(c.replica.Delete(name))
 	} else if types == "pod" {
 		printout_response(c.pod.Delete(name))
+	} else if types == "service" {
+		printout_response(c.sevice.Delete(name))
+	} else if types == "namespace" {
+		printout_response(c.namespace.Delete(name))
 	} else {
 		log.Println("invalid type data")
 	}
