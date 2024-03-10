@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/rulanugrh/aitne/internal/config"
 	"github.com/rulanugrh/aitne/internal/service/apps"
@@ -12,7 +13,7 @@ import (
 )
 
 var (
-	kubeconfig = flag.String("kubeconfig", "$HOME/.kube/config/", "flag for k8s config file")
+	kubeconfig = os.Getenv("KUBECONFIG_PATH")
 	opt        = flag.String("opt", "get", "to use operator ex. get / delete / catch")
 	types      = flag.String("types", "deployment", "to use type data ex. deployment / daemonset")
 	name       = flag.String("name", "demo-deployment", "this flag use for catch opt ")
@@ -35,7 +36,7 @@ type CLI struct {
 }
 
 func main() {
-	client, err := config.GetConfig(kubeconfig)
+	client, err := config.GetConfig(&kubeconfig)
 	if err != nil {
 		log.Printf("Error %s", err.Error())
 	}

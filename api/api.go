@@ -1,9 +1,9 @@
 package main
 
 import (
-	"flag"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/mux"
 	"github.com/rulanugrh/aitne/api/apps"
@@ -11,11 +11,10 @@ import (
 	"github.com/rulanugrh/aitne/internal/config"
 	srv "github.com/rulanugrh/aitne/internal/service/apps"
 	srv2 "github.com/rulanugrh/aitne/internal/service/core"
-
 )
 
 var (
-	kubeconfig = flag.String("kubeconfig", "$HOME/.kube/config/", "flag for k8s config file")
+	kubeconfig = os.Getenv("KUBECONFIG_PATH")
 )
 
 type API struct {
@@ -30,7 +29,7 @@ type API struct {
 }
 
 func main() {
-	client, err := config.GetConfig(kubeconfig)
+	client, err := config.GetConfig(&kubeconfig)
 	if err != nil {
 		log.Printf("error cannot connect k8s: %s", err.Error())
 	}
@@ -50,9 +49,9 @@ func main() {
 		replica:    apps.NewReplicaEndpoint(replica),
 		deployment: apps.NewDeploymentEndpoint(deployment),
 
-		pod: core.NewPodEndpoint(pod),
+		pod:       core.NewPodEndpoint(pod),
 		namespace: core.NewNamespaceEndpoint(namespace),
-		service: core.NewServiceEndpoint(service),
+		service:   core.NewServiceEndpoint(service),
 	}
 
 	router := mux.NewRouter()
