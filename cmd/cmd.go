@@ -33,6 +33,8 @@ type CLI struct {
 	pod       core.Pods
 	sevice    core.Service
 	namespace core.Namespace
+	configmap core.ConfigMaps
+	replicac  core.ReplicationController
 }
 
 func main() {
@@ -41,20 +43,15 @@ func main() {
 		log.Printf("Error %s", err.Error())
 	}
 
-	newDeployment := apps.NewDeployment(client)
-	newDaemonSet := apps.NewDaemonSet(client)
-	newReplica := apps.NewReplicaSet(client)
-	newPod := core.NewPod(client)
-	newService := core.NewServiceKurbenetes(client)
-	newNamespce := core.NewNamespace(client)
-
 	c := CLI{
-		deployment: newDeployment,
-		daemon:     newDaemonSet,
-		replica:    newReplica,
-		pod:        newPod,
-		sevice:     newService,
-		namespace:  newNamespce,
+		deployment: apps.NewDeployment(client),
+		daemon:     apps.NewDaemonSet(client),
+		replica:    apps.NewReplicaSet(client),
+		pod:        core.NewPod(client),
+		sevice:     core.NewServiceKurbenetes(client),
+		namespace:  core.NewNamespace(client),
+		replicac:   core.NewReplicationController(client),
+		configmap:  core.NewConfigMap(client),
 	}
 
 	if opt == &get {
@@ -81,6 +78,10 @@ func (c *CLI) get_opt(types string) {
 		convert_response_to_json(c.sevice.List())
 	} else if types == "namespace" {
 		convert_response_to_json(c.namespace.List())
+	} else if types == "replicac" {
+		convert_response_to_json(c.replicac.List())
+	} else if types == "configmap" {
+		convert_response_to_json(c.configmap.List())
 	} else {
 		log.Println("sorry invalid type data")
 	}
@@ -99,6 +100,10 @@ func (c *CLI) catch_opt(types string, name string) {
 		convert_response_to_json(c.sevice.GetByName(name))
 	} else if types == "namespace" {
 		convert_response_to_json(c.namespace.GetByName(name))
+	} else if types == "replicac" {
+		convert_response_to_json(c.replicac.GetByName(name))
+	} else if types == "configmap" {
+		convert_response_to_json(c.configmap.GetByName(name))
 	} else {
 		log.Println("sorry invalid type data")
 	}
@@ -117,6 +122,10 @@ func (c *CLI) delete_opt(types string, name string) {
 		printout_response(c.sevice.Delete(name))
 	} else if types == "namespace" {
 		printout_response(c.namespace.Delete(name))
+	} else if types == "replicac" {
+		printout_response(c.replicac.Delete(name))
+	} else if types == "configmap" {
+		printout_response(c.configmap.Delete(name))
 	} else {
 		log.Println("invalid type data")
 	}
