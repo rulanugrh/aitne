@@ -26,6 +26,8 @@ type API struct {
 	namespace core.NamespaceEndpoint
 	pod       core.PodEndpoint
 	service   core.ServiceEndpoint
+	configmap core.ConfigMapEndpoint
+	replicac  core.ReplicationControllerEndpoint
 }
 
 func main() {
@@ -42,6 +44,8 @@ func main() {
 	pod := srv2.NewPod(client)
 	namespace := srv2.NewNamespace(client)
 	service := srv2.NewServiceKurbenetes(client)
+	configmap := srv2.NewConfigMap(client)
+	replicac := srv2.NewReplicationController(client)
 
 	api := API{
 		statefull:  apps.NewStatefullEndpoint(statefull),
@@ -52,17 +56,24 @@ func main() {
 		pod:       core.NewPodEndpoint(pod),
 		namespace: core.NewNamespaceEndpoint(namespace),
 		service:   core.NewServiceEndpoint(service),
+		replicac:  core.NewReplicationController(replicac),
+		configmap: core.NewConfigMap(configmap),
 	}
 
 	router := mux.NewRouter()
+
+	// routes for apps services
 	api.DaemonRouter(router)
 	api.DeploymentRoute(router)
 	api.ReplicaRouter(router)
 	api.StatefullRouter(router)
 
+	// routes for core services
 	api.PodRouter(router)
 	api.NamespaceRouter(router)
 	api.ServiceRouter(router)
+	api.ConfigMapRouter(router)
+	api.ReplicationControllerRouter(router)
 
 	server := http.Server{
 		Addr:    "0.0.0.0:3000",
@@ -132,4 +143,20 @@ func (api *API) ServiceRouter(r *mux.Router) {
 	app.HandleFunc("/getAll/", api.service.Get).Methods("GET")
 	app.HandleFunc("/get/{name}", api.service.GetByName).Methods("GET")
 	app.HandleFunc("/delete/{name}", api.service.Delete).Methods("DELETE")
+}
+
+func (api *API) ConfigMapRouter(r *mux.Router) {
+	app := r.PathPrefix("/api/configmap").Subrouter()
+	app.HandleFunc("/create/", api.configmap.Create).Methods("POST")
+	app.HandleFunc("/getAll/", api.configmap.Get).Methods("GET")
+	app.HandleFunc("/get/{name}", api.configmap.GetByName).Methods("GET")
+	app.HandleFunc("/delete/{name}", api.configmap.Delete).Methods("DELETE")
+}
+
+func (api *API) ReplicationControllerRouter(r *mux.Router) {
+	app := r.PathPrefix("/api/replicac").Subrouter()
+	app.HandleFunc("/create/", api.replicac.Create).Methods("POST")
+	app.HandleFunc("/getAll/", api.replicac.Get).Methods("GET")
+	app.HandleFunc("/get/{name}", api.replicac.GetByName).Methods("GET")
+	app.HandleFunc("/delete/{name}", api.replicac.Delete).Methods("DELETE")
 }
