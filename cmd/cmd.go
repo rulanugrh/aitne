@@ -35,6 +35,8 @@ type CLI struct {
 	namespace core.Namespace
 	configmap core.ConfigMaps
 	replicac  core.ReplicationController
+	node      core.Node
+	secret    core.Secret
 }
 
 func main() {
@@ -52,6 +54,8 @@ func main() {
 		namespace:  core.NewNamespace(client),
 		replicac:   core.NewReplicationController(client),
 		configmap:  core.NewConfigMap(client),
+		secret:     core.NewSecretKurbenetes(client),
+		node:       core.NewNodeConfig(client),
 	}
 
 	if opt == &get {
@@ -82,6 +86,10 @@ func (c *CLI) get_opt(types string) {
 		convert_response_to_json(c.replicac.List())
 	} else if types == "configmap" {
 		convert_response_to_json(c.configmap.List())
+	} else if types == "node" {
+		convert_response_to_json(c.node.List())
+	} else if types == "secret" {
+		convert_response_to_json(c.secret.List())
 	} else {
 		log.Println("sorry invalid type data")
 	}
@@ -104,6 +112,10 @@ func (c *CLI) catch_opt(types string, name string) {
 		convert_response_to_json(c.replicac.GetByName(name))
 	} else if types == "configmap" {
 		convert_response_to_json(c.configmap.GetByName(name))
+	} else if types == "node" {
+		convert_response_to_json(c.node.GetByName(name))
+	} else if types == "secret" {
+		convert_response_to_json(c.secret.GetByName(name))
 	} else {
 		log.Println("sorry invalid type data")
 	}
@@ -126,6 +138,10 @@ func (c *CLI) delete_opt(types string, name string) {
 		printout_response(c.replicac.Delete(name))
 	} else if types == "configmap" {
 		printout_response(c.configmap.Delete(name))
+	} else if types == "node" {
+		printout_response(c.node.Delete(name))
+	} else if types == "secert" {
+		printout_response(c.secret.Delete(name))
 	} else {
 		log.Println("invalid type data")
 	}
