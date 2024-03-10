@@ -25,7 +25,7 @@ type daemonset struct {
 
 func NewDaemonSet(client *kubernetes.Clientset) DaemonSet {
 	return &daemonset{
-		client: client.AppsV1().DaemonSets(corev1.NamespaceDefault),
+		client: client.AppsV1().DaemonSets(metav1.NamespaceDefault),
 	}
 }
 
