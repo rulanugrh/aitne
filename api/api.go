@@ -28,6 +28,8 @@ type API struct {
 	service   core.ServiceEndpoint
 	configmap core.ConfigMapEndpoint
 	replicac  core.ReplicationControllerEndpoint
+	secret    core.SecretEndpoint
+	node      core.NodeEndpoint
 }
 
 func main() {
@@ -46,6 +48,8 @@ func main() {
 	service := srv2.NewServiceKurbenetes(client)
 	configmap := srv2.NewConfigMap(client)
 	replicac := srv2.NewReplicationController(client)
+	node := srv2.NewNodeConfig(client)
+	secret := srv2.NewSecretKurbenetes(client)
 
 	api := API{
 		statefull:  apps.NewStatefullEndpoint(statefull),
@@ -58,6 +62,8 @@ func main() {
 		service:   core.NewServiceEndpoint(service),
 		replicac:  core.NewReplicationController(replicac),
 		configmap: core.NewConfigMap(configmap),
+		node:      core.NewNodeEndpoint(node),
+		secret:    core.NewSecretEndpoint(secret),
 	}
 
 	router := mux.NewRouter()
@@ -74,6 +80,8 @@ func main() {
 	api.ServiceRouter(router)
 	api.ConfigMapRouter(router)
 	api.ReplicationControllerRouter(router)
+	api.NodeRouter(router)
+	api.SecretRouter(router)
 
 	server := http.Server{
 		Addr:    "0.0.0.0:3000",
@@ -159,4 +167,20 @@ func (api *API) ReplicationControllerRouter(r *mux.Router) {
 	app.HandleFunc("/getAll/", api.replicac.Get).Methods("GET")
 	app.HandleFunc("/get/{name}", api.replicac.GetByName).Methods("GET")
 	app.HandleFunc("/delete/{name}", api.replicac.Delete).Methods("DELETE")
+}
+
+func (api *API) NodeRouter(r *mux.Router) {
+	app := r.PathPrefix("/api/node").Subrouter()
+	app.HandleFunc("/create/", api.node.Create).Methods("POST")
+	app.HandleFunc("/getAll/", api.node.Get).Methods("GET")
+	app.HandleFunc("/get/{name}", api.node.GetByName).Methods("GET")
+	app.HandleFunc("/delete/{name}", api.node.Delete).Methods("DELETE")
+}
+
+func (api *API) SecretRouter(r *mux.Router) {
+	app := r.PathPrefix("/api/secret").Subrouter()
+	app.HandleFunc("/create/", api.secret.Create).Methods("POST")
+	app.HandleFunc("/getAll/", api.secret.Get).Methods("GET")
+	app.HandleFunc("/get/{name}", api.secret.GetByName).Methods("GET")
+	app.HandleFunc("/delete/{name}", api.secret.Delete).Methods("DELETE")
 }
