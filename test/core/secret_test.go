@@ -39,7 +39,7 @@ func (secret *SecretTest) TestCreateService() {
 		},
 		Immutable: true,
 		Namespace: "default",
-		Type:      "secret",
+		Type:      "Opaque",
 		StringData: map[string]string{
 			"type": "sample-secret",
 		},
