@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"testing"
 
 	"github.com/rulanugrh/aitne/internal/model"
 	"github.com/rulanugrh/aitne/internal/util/constant"
@@ -93,4 +94,8 @@ func (st *StatefullSetTest) TestDeleteStatefull() {
 	}
 
 	st.Equal(http.StatusNoContent, resp.StatusCode)
+}
+
+func TestStatefullSet(t *testing.T) {
+	suite.Run(t, NewStatefullSetTest())
 }
