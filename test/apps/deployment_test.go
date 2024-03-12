@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"testing"
 
 	"github.com/rulanugrh/aitne/internal/model"
 	"github.com/rulanugrh/aitne/internal/util/constant"
@@ -90,4 +91,8 @@ func (deployment *DeploymentTest) TestDeleteDeployment() {
 	}
 
 	deployment.Equal(http.StatusOK, resp.StatusCode)
+}
+
+func TestDeployment(t *testing.T) {
+	suite.Run(t, NewDeploymentTest())
 }
