@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"testing"
 
 	"github.com/rulanugrh/aitne/internal/model"
 	"github.com/rulanugrh/aitne/internal/util/constant"
@@ -94,4 +95,8 @@ func (rc *ReplicaSetTest) TestDeleteReplicaSet() {
 	}
 
 	rc.Equal(http.StatusNoContent, resp.StatusCode)
+}
+
+func TestReplicaSet(t *testing.T) {
+	suite.Run(t, NewReplicaSetTest())
 }
