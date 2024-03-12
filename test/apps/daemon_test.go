@@ -5,31 +5,24 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"os"
 	"testing"
 
-	"github.com/rulanugrh/aitne/internal/config"
 	"github.com/rulanugrh/aitne/internal/model"
 	"github.com/rulanugrh/aitne/internal/util/constant"
 	helper "github.com/rulanugrh/aitne/test"
 	"github.com/stretchr/testify/suite"
-	"k8s.io/client-go/kubernetes"
 )
 
 type DaemonTest struct {
 	suite.Suite
 	client helper.SuiteInterface
 	res    *constant.Response
-	conf   *kubernetes.Clientset
 }
 
 func NewDaemonTest() *DaemonTest {
-	getK8S := os.Getenv("KUBEPATH_CONFIG")
-	client, _ := config.GetConfig(&getK8S)
 	return &DaemonTest{
 		client: helper.NewSuiteUtils(&http.Client{}),
 		res:    &constant.Response{},
-		conf:   client,
 	}
 }
 
@@ -42,7 +35,7 @@ func (daemon *DaemonTest) TestCreateDaemon() {
 			Image:        "nginx:latest",
 			PortExposed:  80,
 			Protocol:     "http",
-			NameProtocol: "http",
+			NameProtocol: "tcp",
 		},
 		MatchLabels: map[string]string{
 			"type": "web-apps",
