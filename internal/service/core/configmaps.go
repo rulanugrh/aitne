@@ -40,7 +40,7 @@ func (c *configmap) Create(req model.ConfigMap) (*model.ResponseConfigMap, error
 			Name:        req.Meta.MetaName,
 			Namespace:   req.Meta.Namespace,
 		},
-		Immutable:  req.Immutable,
+		Immutable:  &req.Immutable,
 		BinaryData: req.BinaryData,
 		Data:       req.Data,
 	}
