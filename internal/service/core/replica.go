@@ -42,8 +42,8 @@ func (r *replicac) Create(req model.ReplicationController) (*model.ResponseRC, e
 			Namespace:   req.Meta.Namespace,
 		},
 		Spec: corev1.ReplicationControllerSpec{
-			Replicas:        req.Replica,
-			MinReadySeconds: *req.MinReady,
+			Replicas:        &req.Replica,
+			MinReadySeconds: *&req.MinReady,
 			Selector:        req.Selector,
 			Template: &corev1.PodTemplateSpec{
 				Spec: corev1.PodSpec{
