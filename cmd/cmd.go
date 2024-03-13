@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/rulanugrh/aitne/internal/config"
 	"github.com/rulanugrh/aitne/internal/service/apps"
@@ -14,9 +15,9 @@ import (
 
 var (
 	kubeconfig = os.Getenv("KUBECONFIG_PATH")
-	opt        = flag.String("opt", "get", "to use operator ex. get / delete / catch")
-	types      = flag.String("types", "deployment", "to use type data ex. deployment / daemonset")
-	name       = flag.String("name", "demo-deployment", "this flag use for catch opt ")
+	opt        = os.Args[0]
+	types      = os.Args[1]
+	name       = flag.String("name", "sample-deployment", "this command for operate by name")
 )
 
 var (
@@ -39,6 +40,45 @@ type CLI struct {
 	secret    core.Secret
 }
 
+func help() {
+	helpContent := [][]string {
+		{ "help", "show help message" },
+		{ "get" , "type of get data " },
+		{ "catch", "type of to catch data by name"  },
+		{ "delete", "type of to delete data by name" },
+		{ "[type]", "type operator like deployment / daemon / etc" },
+		{ "-name", "name of services from type" },
+	}
+
+	example := "\nexample: go run cmd/cmd.go get deployment"
+
+	max := len(helpContent[0][0])
+	for _, part := range helpContent {
+		length := len(part[0])
+		if length > max {
+			max = length
+		}
+	}
+
+	var builder strings.Builder
+	const space = 4
+
+	for _, part := range helpContent {
+		builder.WriteString(part[0])
+		spacer := (max - len(part[0])) + space
+		for spacer > 0 {
+			builder.WriteByte(' ')
+			spacer--
+		}
+
+		builder.WriteString(part[1])
+		builder.WriteByte('\n')
+	}
+
+	println(builder.String()[:builder.Len()-1])
+	println(example)
+}
+
 func main() {
 	client, err := config.GetConfig(&kubeconfig)
 	if err != nil {
@@ -58,12 +98,14 @@ func main() {
 		node:       core.NewNodeConfig(client),
 	}
 
-	if opt == &get {
-		c.get_opt(*types)
-	} else if opt == &catch {
-		c.catch_opt(*types, *name)
-	} else if opt == &deleted {
-		c.delete_opt(*types, *name)
+	if opt == "help" {
+		help()
+	} else if opt == get {
+		c.get_opt(types)
+	} else if opt == catch {
+		c.catch_opt(types, *name)
+	} else if opt == deleted {
+		c.delete_opt(types, *name)
 	} else {
 		log.Println("your opt is invalid, use go run cmd.go -h to see details")
 	}
