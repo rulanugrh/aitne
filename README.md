@@ -9,22 +9,22 @@ export KUBECONFIG_PATH=$HOME/.kube/config
 
 To display command you can use this
 ```bash
-$ go run cmd/cmd.go -h
+$ go run cmd/cmd.go help
 ```
 
 If want to get data about k8s fiture like deployment, daemon, etc. You can use this command
 ```bash
-$ go run cmd/cmd.go -opt=get -type=deployment
+$ go run cmd/cmd.go get deployment
 ```
 
 If want to get data by name you can use this
 ```bash
-$ go run cmd/cmd.go -opt=catch -type=deployment -name=sample-deployment
+$ go run cmd/cmd.go catch deployment -name=sample-deployment
 ```
 
 If want to delete by name you can use this
 ```bash
-$ go run cmd/cmd.go -opt=delete -type=deployment -name=sample-deployment
+$ go run cmd/cmd.go delete deployment -name=sample-deployment
 ```
 
 ## Running API Services
