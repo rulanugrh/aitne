@@ -1,5 +1,5 @@
 ## Aitne
-Tools for management k8s in CLI and management k8s with API resources
+Tools for management k8s in CLI and management k8s with API
 
 ## Usage
 Must export env for kubeconfig path
